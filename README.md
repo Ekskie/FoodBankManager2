@@ -103,7 +103,7 @@ Community
 
 ## Live Deployment
 
-You can access the live application at: [Your Deployment URL Here]([https://foodbankmanager2.onrender.com/])
+You can access the live application at: https://foodbankmanager2.onrender.com/
 
 ## License
 
