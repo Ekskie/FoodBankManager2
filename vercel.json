@@ -13,7 +13,6 @@
     }
   ],
   "env": {
-    "SESSION_SECRET": "@session_secret",
     "DATABASE_URL": "@database_url"
   }
 }
