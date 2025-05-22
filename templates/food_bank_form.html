@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+{% block title %}Add Food Bank - Food Bank Management System{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      crossorigin=""/>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Add Food Bank</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" novalidate class="needs-validation">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the food bank name.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.address.label(class="form-label") }}
+                {{ form.address(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the address.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.city.label(class="form-label") }}
+                {{ form.city(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the city.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.state.label(class="form-label") }}
+                {{ form.state(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the state.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.zip_code.label(class="form-label") }}
+                {{ form.zip_code(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the ZIP code.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.phone.label(class="form-label") }}
+                {{ form.phone(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the phone number.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the email address.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.website.label(class="form-label") }}
+                {{ form.website(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.hours.label(class="form-label") }}
+                {{ form.hours(class="form-control", rows="3", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the operating hours.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.services.label(class="form-label") }}
+                {{ form.services(class="form-control", rows="3", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the services offered.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.requirements.label(class="form-label") }}
+                {{ form.requirements(class="form-control", rows="3") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.latitude.label(class="form-label") }}
+                {{ form.latitude(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.longitude.label(class="form-label") }}
+                {{ form.longitude(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Select Location on Map</label>
+                <div id="map" style="height: 400px;"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Food Bank</button>
+        </form>
+    </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        crossorigin=""></script>
+<script>
+    var map = L.map('map').setView([12.811801, 122.387695], 4); // Default center: USA
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    var marker;
+
+    function updateLatLng(lat, lng) {
+        document.getElementById("latitude").value = lat.toFixed(6);
+        document.getElementById("longitude").value = lng.toFixed(6);
+    }
+
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+
+        updateLatLng(lat, lng);
+    });
+
+    // Set IDs to the latitude and longitude fields for easy access
+    document.querySelector('input[name="latitude"]').id = "latitude";
+    document.querySelector('input[name="longitude"]').id = "longitude";
+</script>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Food Request Details - Food Bank Management System{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Food Request Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Household Size: {{ request.household_size }}</h5>
+            <p class="card-text"><strong>Requested Items:</strong><br>{{ request.request_items|replace('\n', '<br>')|safe }}</p>
+            <p class="card-text"><strong>Emergency:</strong> {{ 'Yes' if request.emergency else 'No' }}</p>
+            <p class="card-text"><strong>Additional Notes:</strong><br>{{ request.notes|default('None')|replace('\n', '<br>')|safe }}</p>
+            <p class="card-text"><strong>Preferred Pickup Date/Time:</strong> {{ request.appointment_date.strftime('%b %d, %Y %I:%M %p') if request.appointment_date else 'Not specified' }}</p>
+            <p class="card-text"><strong>Status:</strong> {{ request.status|capitalize if request.status else 'Unknown' }}</p>
+        </div>
+    </div>
+    <a href="{{ url_for('beneficiaries') }}" class="btn btn-secondary mt-3">Back to Requests</a>
+</div>
+{% endblock %}

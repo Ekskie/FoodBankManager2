@@ -515,7 +515,26 @@ def approve_request(request_id):
 @app.route('/locations')
 def locations():
     food_banks = FoodBank.query.all()
-    return render_template('locations.html', title='Food Bank Locations', food_banks=food_banks)
+    # Convert food_banks to list of dicts for JSON serialization in template
+    food_banks_serializable = []
+    for fb in food_banks:
+        food_banks_serializable.append({
+            'id': fb.id,
+            'name': fb.name,
+            'address': fb.address,
+            'city': fb.city,
+            'state': fb.state,
+            'zip_code': fb.zip_code,
+            'phone': fb.phone,
+            'email': fb.email,
+            'website': fb.website,
+            'hours': fb.hours,
+            'services': fb.services,
+            'requirements': fb.requirements,
+            'latitude': fb.latitude,
+            'longitude': fb.longitude
+        })
+    return render_template('locations.html', title='Food Bank Locations', food_banks=food_banks_serializable)
 
 @app.route('/locations/<int:food_bank_id>')
 def food_bank_detail(food_bank_id):
@@ -975,7 +994,12 @@ def messages():
     
     db.session.commit()
     
-    return render_template('components/message.html', received=received, sent=sent)
+    # Provide an empty form for composing new messages
+    form = MessageForm()
+    users = User.query.filter(User.id != current_user.id).all()
+    form.recipient_id.choices = [(u.id, f"{u.username} ({u.role})") for u in users]
+    
+    return render_template('message_messenger.html', received=received, sent=sent, form=form)
 
 @app.route('/messages/new', methods=['GET', 'POST'])
 @login_required
@@ -1000,7 +1024,10 @@ def new_message():
         flash('Message sent successfully!', 'success')
         return redirect(url_for('messages'))
     
-    return render_template('message_form.html', title='New Message', form=form)
+    # Also get received messages to pass to messenger template
+    received = Message.query.filter_by(recipient_id=current_user.id).order_by(Message.created_at.desc()).all()
+    
+    return render_template('message_messenger.html', title='New Message', form=form, received=received)
 
 # Error handlers
 @app.errorhandler(404)

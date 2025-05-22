@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Food Request - Food Bank Management System{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Request Food</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" novalidate class="needs-validation">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.household_size.label(class="form-label") }}
+                {{ form.household_size(class="form-control", min="1", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter your household size.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.request_items.label(class="form-label") }}
+                {{ form.request_items(class="form-control", rows="4", required=True) }}
+                <div class="invalid-feedback">
+                    Please specify the items you are requesting.
+                </div>
+            </div>
+
+            <div class="form-check mb-3">
+                {{ form.emergency(class="form-check-input") }}
+                {{ form.emergency.label(class="form-check-label") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.notes.label(class="form-label") }}
+                {{ form.notes(class="form-control", rows="3") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.appointment_date.label(class="form-label") }}
+                {{ form.appointment_date(class="form-control", type="datetime-local") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

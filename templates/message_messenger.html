@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Messages list sidebar -->
+        <div class="col-md-4 border-end" style="height: 80vh; overflow-y: auto;">
+            <h4>Messages</h4>
+            <ul class="nav nav-tabs" id="messageTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button" role="tab" aria-controls="received" aria-selected="true">Received</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button" role="tab" aria-controls="sent" aria-selected="false">Sent</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="messageTabsContent" style="height: calc(80vh - 48px); overflow-y: auto;">
+                <div class="tab-pane fade show active" id="received" role="tabpanel" aria-labelledby="received-tab">
+                    {% if received %}
+                    <div class="list-group">
+                        {% for message in received %}
+                        <a href="{{ url_for('messages') }}" class="list-group-item list-group-item-action {% if not message.read %}fw-bold{% endif %}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ message.subject }}</h6>
+                                <small>{{ message.created_at.strftime('%b %d, %I:%M %p') }}</small>
+                            </div>
+                            <p class="mb-1 text-truncate">{{ message.content }}</p>
+                            <small>From: {{ message.sender.username }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No messages found.</p>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab">
+                    {% if sent %}
+                    <div class="list-group">
+                        {% for message in sent %}
+                        <a href="{{ url_for('messages') }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ message.subject }}</h6>
+                                <small>{{ message.created_at.strftime('%b %d, %I:%M %p') }}</small>
+                            </div>
+                            <p class="mb-1 text-truncate">{{ message.content }}</p>
+                            <small>To: {{ message.recipient.username }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No sent messages found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Message compose form -->
+        <div class="col-md-8">
+            <h4>Compose New Message</h4>
+            <form method="POST" action="{{ url_for('new_message') }}" novalidate class="needs-validation">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.recipient_id.label(class="form-label") }}
+                    {{ form.recipient_id(class="form-select", required=True) }}
+                    <div class="invalid-feedback">
+                        Please select a recipient.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.subject.label(class="form-label") }}
+                    {{ form.subject(class="form-control", placeholder="Subject", required=True) }}
+                    <div class="invalid-feedback">
+                        Please enter a subject.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.content.label(class="form-label") }}
+                    {{ form.content(class="form-control", placeholder="Message content", rows="5", required=True) }}
+                    <div class="invalid-feedback">
+                        Please enter the message content.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

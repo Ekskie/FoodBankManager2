@@ -52,7 +52,7 @@
     </div>
     {% endif %}
 
-    {% if donation.status == 'approved' %}
+    {% if donation.status == 'approved' and donation.donation_type == 'food' and current_user.role != ROLE_ADMIN %}
     <div class="mt-4">
         <h3>Add Food Item to Donation</h3>
         <form method="POST" action="{{ url_for('add_donation_item', donation_id=donation.id) }}">
@@ -97,7 +97,10 @@
         </form>
     </div>
     {% endif %}
-
+    {% if current_user.role == 'admin' %}
+    <a href="{{ url_for('admin') }}" class="btn btn-secondary mt-3">Back to Admin</a>
+    {% else %}
     <a href="{{ url_for('donations') }}" class="btn btn-secondary mt-3">Back to Donations</a>
+    {% endif %}
 </div>
 {% endblock %}

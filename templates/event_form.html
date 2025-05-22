@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Community Event - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Create Community Event</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+            {% if form.title.errors %}
+                <div class="text-danger">{{ form.title.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control", rows=4) }}
+            {% if form.description.errors %}
+                <div class="text-danger">{{ form.description.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.event_date.label(class="form-label") }}
+            {{ form.event_date(class="form-control", type="datetime-local") }}
+            {% if form.event_date.errors %}
+                <div class="text-danger">{{ form.event_date.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.location.label(class="form-label") }}
+            {{ form.location(class="form-control") }}
+            {% if form.location.errors %}
+                <div class="text-danger">{{ form.location.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.event_type.label(class="form-label") }}
+            {{ form.event_type(class="form-select") }}
+            {% if form.event_type.errors %}
+                <div class="text-danger">{{ form.event_type.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.max_participants.label(class="form-label") }}
+            {{ form.max_participants(class="form-control") }}
+            {% if form.max_participants.errors %}
+                <div class="text-danger">{{ form.max_participants.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="form-check mb-3">
+            {{ form.registration_required(class="form-check-input") }}
+            {{ form.registration_required.label(class="form-check-label") }}
+            {% if form.registration_required.errors %}
+                <div class="text-danger">{{ form.registration_required.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.registration_link.label(class="form-label") }}
+            {{ form.registration_link(class="form-control") }}
+            {% if form.registration_link.errors %}
+                <div class="text-danger">{{ form.registration_link.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+    </form>
+</div>
+{% endblock %}

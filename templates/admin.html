@@ -76,6 +76,44 @@
     </div>
 </div>
 
+<!-- Quick Links -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Quick Actions</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('admin_users') }}" class="btn btn-outline-primary d-block py-3">
+                            <i class="fas fa-users fa-2x mb-2"></i><br>
+                            Manage Users
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('add_food_bank') }}" class="btn btn-outline-primary d-block py-3">
+                            <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
+                            Add Food Bank
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('inventory') }}" class="btn btn-outline-primary d-block py-3">
+                            <i class="fas fa-boxes fa-2x mb-2"></i><br>
+                            Manage Inventory
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('create_distribution') }}" class="btn btn-outline-primary d-block py-3">
+                            <i class="fas fa-truck fa-2x mb-2"></i><br>
+                            Create Distribution
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- System Statistics -->
 <div class="row mb-5">
     <div class="col-12">
@@ -383,44 +421,6 @@
     </div>
 </div>
 
-<!-- Quick Links -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h3 class="h5 mb-0">Quick Actions</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <a href="{{ url_for('admin_users') }}" class="btn btn-outline-primary d-block py-3">
-                            <i class="fas fa-users fa-2x mb-2"></i><br>
-                            Manage Users
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{{ url_for('add_food_bank') }}" class="btn btn-outline-primary d-block py-3">
-                            <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
-                            Add Food Bank
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{{ url_for('inventory') }}" class="btn btn-outline-primary d-block py-3">
-                            <i class="fas fa-boxes fa-2x mb-2"></i><br>
-                            Manage Inventory
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{{ url_for('create_distribution') }}" class="btn btn-outline-primary d-block py-3">
-                            <i class="fas fa-truck fa-2x mb-2"></i><br>
-                            Create Distribution
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 {% block extra_js %}
 <script>

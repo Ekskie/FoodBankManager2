@@ -494,6 +494,37 @@
 </div>
 
 {% elif current_user.role == 'admin' %}
+<!-- Admin Stats -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="dashboard-stat bg-primary bg-opacity-10 text-primary">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>{{ data.pending_requests }}</h3>
+            <p>Pending Requests</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="dashboard-stat bg-success bg-opacity-10 text-success">
+            <i class="fas fa-donate"></i>
+            <h3>{{ data.pending_donations }}</h3>
+            <p>Pending Donations</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="dashboard-stat bg-warning bg-opacity-10 text-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>{{ data.low_inventory }}</h3>
+            <p>Low Inventory Items</p>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="dashboard-stat bg-info bg-opacity-10 text-info">
+            <i class="fas fa-user-clock"></i>
+            <h3>{{ data.open_volunteer_slots }}</h3>
+            <p>Open Volunteer Slots</p>
+        </div>
+    </div>
+</div>
 <!-- Admin Control Center Module with 5-button pattern -->
 <div class="row mb-5">
     <div class="col-12">
@@ -549,35 +580,60 @@
         </div>
     </div>
 </div>
-
-<!-- Admin Stats -->
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="dashboard-stat bg-primary bg-opacity-10 text-primary">
-            <i class="fas fa-clipboard-list"></i>
-            <h3>{{ data.pending_requests }}</h3>
-            <p>Pending Requests</p>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="dashboard-stat bg-success bg-opacity-10 text-success">
-            <i class="fas fa-donate"></i>
-            <h3>{{ data.pending_donations }}</h3>
-            <p>Pending Donations</p>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="dashboard-stat bg-warning bg-opacity-10 text-warning">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>{{ data.low_inventory }}</h3>
-            <p>Low Inventory Items</p>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="dashboard-stat bg-info bg-opacity-10 text-info">
-            <i class="fas fa-user-clock"></i>
-            <h3>{{ data.open_volunteer_slots }}</h3>
-            <p>Open Volunteer Slots</p>
+<!-- Food Inventory Center Module with 5-button pattern -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success bg-opacity-25">
+                <h2 class="h4 mb-0"><i class="fas fa-boxes me-2"></i>Food Inventory Center</h2>
+            </div>
+            <div class="card-body">
+                <div class="row module-buttons-container">
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="/inventory" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-cubes"></i>
+                                <h5>Current Stock</h5>
+                                <p class="small mb-0">View inventory</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="{{ url_for('add_item') }}" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-edit"></i>
+                                <h5>Add/Update Items</h5>
+                                <p class="small mb-0">Manage inventory</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#expiry-tracker" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-calendar-times"></i>
+                                <h5>Expiry Tracker</h5>
+                                <p class="small mb-0">Check expiration dates</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="{{ url_for('distribution') }}" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-sitemap"></i>
+                                <h5>Distribution Planner</h5>
+                                <p class="small mb-0">Allocate inventory</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <div class="module-button shadow-sm border">
+                            <i class="fas fa-chart-bar"></i>
+                            <h5>Inventory Reports</h5>
+                            <p class="small mb-0">Generate reports</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -684,7 +740,7 @@
                 {% if notifications %}
                 <ul class="list-group list-group-flush">
                     {% for notification in notifications %}
-                    <li class="list-group-item {% if not notification.read %}bg-dark{% endif %}">
+                    <li class="list-group-item {% if not notification.read %}bg-light{% endif %}">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ notification.title }}</h6>
                             <small class="text-muted">{{ notification.created_at.strftime('%b %d, %I:%M %p') }}</small>

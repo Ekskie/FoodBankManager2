@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}Volunteer Management - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Volunteer Management</h1>
+    <h2>Volunteers</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for volunteer in volunteers %}
+            <tr>
+                <td>{{ volunteer.username }}</td>
+                <td>{{ volunteer.first_name }} {{ volunteer.last_name }}</td>
+                <td>{{ volunteer.phone }}</td>
+                <td>{{ volunteer.email }}</td>
+                <td>
+                    <!-- Add any admin actions here, e.g., edit, deactivate -->
+                    <a href="#" class="btn btn-sm btn-primary disabled">Edit</a>
+                    <a href="#" class="btn btn-sm btn-danger disabled">Deactivate</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">Volunteer Slots</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Volunteer</th>
+                <th>Role</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+                <th>Hours Logged</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for slot in slots %}
+            <tr>
+                <td>{{ slot.date.strftime('%Y-%m-%d') if slot.date else 'N/A' }}</td>
+                <td>{{ slot.volunteer.username if slot.volunteer else 'Unassigned' }}</td>
+                <td>{{ slot.role }}</td>
+                <td>{{ slot.start_time.strftime('%H:%M') if slot.start_time else 'N/A' }}</td>
+                <td>{{ slot.end_time.strftime('%H:%M') if slot.end_time else 'N/A' }}</td>
+                <td>{{ slot.status.capitalize() }}</td>
+                <td>{{ slot.hours_logged if slot.hours_logged else '0' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

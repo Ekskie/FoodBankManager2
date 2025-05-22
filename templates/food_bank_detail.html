@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}{{ food_bank.name }} - Food Bank Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">{{ food_bank.name }}</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Address</h5>
+                <p class="card-text">
+                    {{ food_bank.address }}<br>
+                    {{ food_bank.city }}, {{ food_bank.state }} {{ food_bank.zip_code }}
+                </p>
+
+                <h5 class="card-title">Contact Information</h5>
+                <p class="card-text">
+                    Phone: {{ food_bank.phone }}<br>
+                    Email: <a href="mailto:{{ food_bank.email }}">{{ food_bank.email }}</a><br>
+                    {% if food_bank.website %}
+                    Website: <a href="{{ food_bank.website }}" target="_blank" rel="noopener noreferrer">{{ food_bank.website }}</a>
+                    {% endif %}
+                </p>
+
+                <h5 class="card-title">Operating Hours</h5>
+                <p class="card-text">{{ food_bank.hours }}</p>
+
+                <h5 class="card-title">Services Offered</h5>
+                <p class="card-text">{{ food_bank.services }}</p>
+
+                {% if food_bank.requirements %}
+                <h5 class="card-title">Requirements</h5>
+                <p class="card-text">{{ food_bank.requirements }}</p>
+                {% endif %}
+
+                {% if food_bank.latitude and food_bank.longitude %}
+                <h5 class="card-title">Location</h5>
+                <div id="map" style="height: 400px;"></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <a href="{{ url_for('locations') }}" class="btn btn-secondary">Back to Food Bank Locations</a>
+    </div>
+</div>
+
+{% if food_bank.latitude and food_bank.longitude %}
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
+<script>
+    var map = L.map('map').setView([{{ food_bank.latitude }}, {{ food_bank.longitude }}], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    L.marker([{{ food_bank.latitude }}, {{ food_bank.longitude }}]).addTo(map)
+        .bindPopup('{{ food_bank.name }}')
+        .openPopup();
+</script>
+{% endif %}
+{% endblock %}

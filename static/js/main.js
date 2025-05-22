@@ -179,43 +179,63 @@ function loadMessages() {
         .catch(error => console.error('Error loading messages:', error));
 }
 
-// Dark/light mode toggle
-function toggleDarkMode() {
-    const htmlElement = document.documentElement;
-    const currentTheme = htmlElement.getAttribute('data-bs-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
     
-    htmlElement.setAttribute('data-bs-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    // Initialize popovers
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl);
+    });
     
-    // Update icon
-    const themeIcon = document.getElementById('theme-icon');
-    if (themeIcon) {
-        if (newTheme === 'dark') {
-            themeIcon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            themeIcon.classList.replace('fa-sun', 'fa-moon');
-        }
-    }
-}
+    // Initialize toasts
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    const toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl);
+    });
+    
+    // Show all toasts
+    toastList.forEach(toast => toast.show());
+    
+    // Handle notification badge updates
+    updateNotificationBadges();
+    
+    // Setup any charts
+    setupCharts();
+    
+    // Enable form validation
+    enableFormValidation();
+    
+    // Initialize date pickers
+    initializeDatepickers();
+    
+    // Handle expandable/collapsible sections
+    setupCollapsibles();
 
-// Check preferred theme on load
-function checkUserTheme() {
+    // Setup dark/light mode toggle button
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+
+    // Load saved theme from localStorage
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
-        document.documentElement.setAttribute('data-bs-theme', savedTheme);
-        
-        // Set icon
-        const themeIcon = document.getElementById('theme-icon');
-        if (themeIcon) {
-            if (savedTheme === 'dark') {
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-            }
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+        if (themeToggle) {
+            themeToggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         }
     }
-}
 
-// Call theme check on page load
-checkUserTheme();
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+    }
+});
