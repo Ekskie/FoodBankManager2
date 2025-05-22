@@ -91,12 +91,18 @@ A `vercel.json` file is also included for deployment on Vercel with Python suppo
 
 ## Application Screenshot
 
-![Application Screenshot](https://via.placeholder.com/800x400.png?text=Food+Bank+Manager+Screenshot)
+![Application Screenshot](![image](https://github.com/user-attachments/assets/d2e85c9c-6feb-46a4-8892-5b5f0beee0a7)
+)
+![image](https://github.com/user-attachments/assets/bccbec96-541b-47c2-9e32-922a6d2a690c)
+![image](https://github.com/user-attachments/assets/903bf26d-95eb-4cdf-adbf-065b7c6326a3)
+![image](https://github.com/user-attachments/assets/cedda90e-a23d-4333-86c3-62498335f00a)
+![image](https://github.com/user-attachments/assets/cea23bec-8b6d-4d75-815b-33909409dd54)
+
 
 ## Live Deployment
 
-You can access the live application at: [Your Deployment URL Here](https://your-deployment-url.com)
+You can access the live application at: [Your Deployment URL Here]([https://your-deployment-url.com](https://foodbankmanager2.onrender.com/))
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the name of Dennrick Agustin.
