@@ -4,3 +4,4 @@ SQLAlchemy
 Werkzeug
 Flask-Login
 Flask-WTF
+gunicorn
