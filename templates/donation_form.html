@@ -1,0 +1,184 @@
+{% extends "layout.html" %}
+
+{% block title %}Make a Donation - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="h2 mb-0">Make a Donation</h1>
+        <p class="lead">Thank you for your generosity!</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ url_for('donations') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Donations
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="h5 mb-0"><i class="fas fa-gift me-2"></i>Donation Form</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('new_donation') }}" class="needs-validation" id="donation-form" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-4">
+                        {{ form.donation_type.label(class="form-label") }}
+                        {{ form.donation_type(class="form-select") }}
+                        <div class="form-text">Select the type of donation you'd like to make</div>
+                        {% for error in form.donation_type.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div id="money-donation-fields" style="display: none;">
+                        <div class="mb-4">
+                            {{ form.amount.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.amount(class="form-control", placeholder="0.00") }}
+                            </div>
+                            <div class="form-text">Enter the amount you'd like to donate</div>
+                            {% for error in form.amount.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div id="food-donation-fields" style="display: none;">
+                        <div class="mb-4">
+                            <label class="form-label">Food Items</label>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                After submitting your donation, you'll be able to add specific food items once your donation is approved.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.pickup_date.label(class="form-label") }}
+                            {{ form.pickup_date(class="form-control", type="datetime-local") }}
+                            <div class="form-text">When would you like us to pick up your donation? (Optional)</div>
+                            {% for error in form.pickup_date.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.pickup_address.label(class="form-label") }}
+                            {{ form.pickup_address(class="form-control", placeholder="Enter the address for pickup") }}
+                            <div class="form-text">Where should we pick up your donation? (Optional)</div>
+                            {% for error in form.pickup_address.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.notes.label(class="form-label") }}
+                        {{ form.notes(class="form-control", rows=3, placeholder="Any additional information about your donation") }}
+                        <div class="form-text">Add any additional notes or special instructions</div>
+                        {% for error in form.notes.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('donations') }}" class="btn btn-outline-secondary">Cancel</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="h5 mb-0"><i class="fas fa-info-circle me-2"></i>Donation Information</h3>
+            </div>
+            <div class="card-body">
+                <h4 class="h6 mb-3">Types of Donations</h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-apple-alt text-success me-3 fs-4"></i>
+                        <div>
+                            <strong>Food Donations</strong>
+                            <p class="mb-0 small">Non-perishable food items, canned goods, etc.</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-dollar-sign text-success me-3 fs-4"></i>
+                        <div>
+                            <strong>Monetary Donations</strong>
+                            <p class="mb-0 small">Financial contributions to support our operations</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-box text-success me-3 fs-4"></i>
+                        <div>
+                            <strong>Other Donations</strong>
+                            <p class="mb-0 small">Supplies, equipment, or other items</p>
+                        </div>
+                    </li>
+                </ul>
+                
+                <h4 class="h6 mb-3">Most Needed Items</h4>
+                <ul class="list-group">
+                    <li class="list-group-item">Canned proteins (tuna, chicken, beans)</li>
+                    <li class="list-group-item">Peanut butter</li>
+                    <li class="list-group-item">Rice and pasta</li>
+                    <li class="list-group-item">Canned fruits and vegetables</li>
+                    <li class="list-group-item">Hygiene items</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="h6 mb-3">Need Help?</h4>
+                <p>If you have any questions or need assistance with your donation, please contact us:</p>
+                <div class="d-grid">
+                    <a href="tel:+15551234567" class="btn btn-outline-primary mb-2">
+                        <i class="fas fa-phone me-2"></i>Call (555) 123-4567
+                    </a>
+                    <a href="mailto:donations@foodbank.org" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Email Donation Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const donationType = document.getElementById('donation_type');
+        const moneyFields = document.getElementById('money-donation-fields');
+        const foodFields = document.getElementById('food-donation-fields');
+        
+        function updateFormFields() {
+            if (donationType.value === 'money') {
+                moneyFields.style.display = 'block';
+                foodFields.style.display = 'none';
+            } else if (donationType.value === 'food') {
+                moneyFields.style.display = 'none';
+                foodFields.style.display = 'block';
+            } else {
+                moneyFields.style.display = 'none';
+                foodFields.style.display = 'none';
+            }
+        }
+        
+        // Initialize form
+        updateFormFields();
+        
+        // Update when donation type changes
+        donationType.addEventListener('change', updateFormFields);
+    });
+</script>
+{% endblock %}
+{% endblock %}

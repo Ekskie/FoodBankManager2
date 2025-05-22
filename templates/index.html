@@ -1,0 +1,184 @@
+{% extends "layout.html" %}
+
+{% block title %}Home - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-lg-6">
+        <h1 class="display-4 mb-4">Fighting Hunger Together</h1>
+        <p class="lead">Our food bank management system connects donors, beneficiaries, volunteers, and partners to efficiently distribute food to those in need.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-4 me-md-2">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg px-4">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6 d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <svg width="400" height="300" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                <rect x="100" y="200" width="600" height="300" rx="20" fill="#4dabf7" opacity="0.3"/>
+                <rect x="200" y="100" width="400" height="400" rx="20" fill="#339af0" opacity="0.5"/>
+                <circle cx="400" cy="300" r="150" fill="#1c7ed6" opacity="0.7"/>
+                <path d="M320 250 L340 270 L390 220" stroke="#fff" stroke-width="10" fill="none"/>
+                <path d="M375 350 C375 350, 400 380, 425 350" stroke="#fff" stroke-width="10" fill="none"/>
+                <path d="M350 330 L350 330 L450 330" stroke="#fff" stroke-width="10" fill="none"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<hr class="mb-5">
+
+<div class="row text-center mb-5">
+    <div class="col-12">
+        <h2 class="mb-4">How You Can Help</h2>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="fas fa-donate fa-3x mb-3 text-primary"></i>
+                <h3>Donate</h3>
+                <p>Contribute food, funds, or resources to support those in need.</p>
+                <a href="{{ url_for('login') if not current_user.is_authenticated else url_for('new_donation') }}" class="btn btn-outline-primary mt-3">Donate Now</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="fas fa-hands-helping fa-3x mb-3 text-success"></i>
+                <h3>Volunteer</h3>
+                <p>Lend your time and skills to make a difference in your community.</p>
+                <a href="{{ url_for('login') if not current_user.is_authenticated else url_for('volunteers') }}" class="btn btn-outline-success mt-3">Join Us</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="fas fa-building fa-3x mb-3 text-info"></i>
+                <h3>Partner</h3>
+                <p>Create a partnership to increase our collective impact.</p>
+                <a href="{{ url_for('login') if not current_user.is_authenticated else url_for('partners') }}" class="btn btn-outline-info mt-3">Become a Partner</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="mb-5">
+
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h2 class="mb-4">Our Impact</h2>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat bg-primary bg-opacity-10 text-primary">
+            <i class="fas fa-box"></i>
+            <h3>10,000+</h3>
+            <p>Food Items Distributed</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat bg-success bg-opacity-10 text-success">
+            <i class="fas fa-users"></i>
+            <h3>5,000+</h3>
+            <p>Families Helped</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat bg-warning bg-opacity-10 text-warning">
+            <i class="fas fa-clock"></i>
+            <h3>25,000+</h3>
+            <p>Volunteer Hours</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat bg-info bg-opacity-10 text-info">
+            <i class="fas fa-handshake"></i>
+            <h3>100+</h3>
+            <p>Community Partners</p>
+        </div>
+    </div>
+</div>
+
+<hr class="mb-5">
+
+<div class="row mb-5">
+    <div class="col-md-6 mb-4">
+        <h2>Find a Food Bank</h2>
+        <p>Locate food banks in your area using our interactive map.</p>
+        <a href="{{ url_for('locations') }}" class="btn btn-primary">View Locations</a>
+    </div>
+    <div class="col-md-6 mb-4">
+        <h2>Upcoming Events</h2>
+        <p>Join us for food drives, volunteer opportunities, and community gatherings.</p>
+        <a href="{{ url_for('community') }}" class="btn btn-primary">See Events</a>
+    </div>
+</div>
+
+<hr class="mb-5">
+
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h2 class="mb-4">Our Core Modules</h2>
+        <p class="lead mb-5">Designed to efficiently connect all aspects of food bank operations</p>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-tachometer-alt me-2 text-primary"></i>User Portal Hub</h5>
+                <p class="card-text">Central navigation with role-based dashboards for all users.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-boxes me-2 text-success"></i>Food Inventory</h5>
+                <p class="card-text">Comprehensive inventory management with real-time tracking.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-donate me-2 text-info"></i>Donation Management</h5>
+                <p class="card-text">Streamlined donation processing with tracking and receipts.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-hands-helping me-2 text-warning"></i>Beneficiary Services</h5>
+                <p class="card-text">Simplified food request and distribution process for those in need.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-map-marker-alt me-2 text-danger"></i>Food Bank Locator</h5>
+                <p class="card-text">Interactive map and directory of food bank locations.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-building me-2 text-secondary"></i>Partner Portal</h5>
+                <p class="card-text">Special tools for partner establishments to contribute efficiently.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

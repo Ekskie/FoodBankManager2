@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}Profile - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Edit Profile</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" novalidate class="needs-validation">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.first_name.label(class="form-label") }}
+                {{ form.first_name(class="form-control", placeholder="First Name", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter your first name.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.last_name.label(class="form-label") }}
+                {{ form.last_name(class="form-control", placeholder="Last Name", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter your last name.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.phone.label(class="form-label") }}
+                {{ form.phone(class="form-control", placeholder="Phone Number") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.address.label(class="form-label") }}
+                {{ form.address(class="form-control", placeholder="Address") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.city.label(class="form-label") }}
+                {{ form.city(class="form-control", placeholder="City") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.state.label(class="form-label") }}
+                {{ form.state(class="form-control", placeholder="State") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.zip_code.label(class="form-label") }}
+                {{ form.zip_code(class="form-control", placeholder="Zip Code") }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

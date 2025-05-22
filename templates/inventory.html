@@ -1,0 +1,373 @@
+{% extends "layout.html" %}
+
+{% block title %}Food Inventory - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="h2 mb-0">Food Inventory Center</h1>
+        <p class="lead">Manage and track food inventory</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ url_for('add_item') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Add New Item
+        </a>
+    </div>
+</div>
+
+<!-- Food Inventory Center Module with 5-button pattern -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success bg-opacity-25">
+                <h2 class="h4 mb-0"><i class="fas fa-boxes me-2"></i>Food Inventory Center</h2>
+            </div>
+            <div class="card-body">
+                <div class="row module-buttons-container">
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#current-stock" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-cubes"></i>
+                                <h5>Current Stock</h5>
+                                <p class="small mb-0">View inventory</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="{{ url_for('add_item') }}" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-edit"></i>
+                                <h5>Add/Update Items</h5>
+                                <p class="small mb-0">Manage inventory</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#expiry-tracker" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-calendar-times"></i>
+                                <h5>Expiry Tracker</h5>
+                                <p class="small mb-0">Check expiration dates</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="{{ url_for('distribution') }}" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-sitemap"></i>
+                                <h5>Distribution Planner</h5>
+                                <p class="small mb-0">Allocate inventory</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <div class="module-button shadow-sm border">
+                            <i class="fas fa-chart-bar"></i>
+                            <h5>Inventory Reports</h5>
+                            <p class="small mb-0">Generate reports</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inventory Statistics -->
+<div class="row mb-5">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Inventory Summary</h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" data-chart-type="inventory">
+                    <canvas id="inventoryChart" data-chart-values='{"categories": {{ categories|tojson }}, "quantities": [{% for category in categories %}{{ items|selectattr("category", "equalto", category)|sum(attribute="quantity") }}{% if not loop.last %},{% endif %}{% endfor %}]}'></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100" id="expiry-tracker">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Items Expiring Soon</h3>
+            </div>
+            <div class="card-body">
+                {% if expiring_soon %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Expiry Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in expiring_soon %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.category|capitalize }}</td>
+                                <td>{{ item.quantity }} {{ item.unit }}</td>
+                                <td>
+                                    {% if item.expiry_date %}
+                                    <span class="{% if item.expiry_date <= today %}text-danger fw-bold{% elif (item.expiry_date - today).days <= 7 %}text-warning fw-bold{% endif %}">
+                                        {{ item.expiry_date.strftime('%b %d, %Y') }}
+                                    </span>
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center">No items expiring soon</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Current Stock Inventory Table -->
+<div class="row mb-4" id="current-stock">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="h5 mb-0">Current Inventory</h3>
+                <div class="input-group" style="max-width: 300px;">
+                    <input type="text" id="inventory-search" class="form-control" placeholder="Search items...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="btn-group" role="group" aria-label="Category filters">
+                        <button type="button" class="btn btn-outline-primary active" data-category="all">All</button>
+                        {% for category in categories %}
+                        <button type="button" class="btn btn-outline-primary" data-category="{{ category }}">{{ category|capitalize }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover" id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Location</th>
+                                <th>Expiry Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr data-category="{{ item.category }}">
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.category|capitalize }}</td>
+                                <td>
+                                    {% if item.quantity < 10 %}
+                                    <span class="text-danger fw-bold">{{ item.quantity }}</span>
+                                    {% else %}
+                                    {{ item.quantity }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.unit }}</td>
+                                <td>{{ item.location or 'Not specified' }}</td>
+                                <td>
+                                    {% if item.expiry_date %}
+                                    <span class="{% if item.expiry_date <= today %}text-danger fw-bold{% elif (item.expiry_date - today).days <= 7 %}text-warning fw-bold{% endif %}">
+                                        {{ item.expiry_date.strftime('%b %d, %Y') }}
+                                    </span>
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#quickUpdateModal" data-item-id="{{ item.id }}" data-item-name="{{ item.name }}" data-item-quantity="{{ item.quantity }}">
+                                            <i class="fas fa-plus-minus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Update Modal -->
+<div class="modal fade" id="quickUpdateModal" tabindex="-1" aria-labelledby="quickUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickUpdateModalLabel">Update Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="quick-update-form">
+                    <input type="hidden" id="item-id">
+                    <div class="mb-3">
+                        <label for="item-name" class="form-label">Item</label>
+                        <input type="text" class="form-control" id="item-name" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="current-quantity" class="form-label">Current Quantity</label>
+                        <input type="number" class="form-control" id="current-quantity" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity-change" class="form-label">Change</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="decrease-btn">-</button>
+                            <input type="number" class="form-control text-center" id="quantity-change" value="0">
+                            <button class="btn btn-outline-secondary" type="button" id="increase-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new-quantity" class="form-label">New Quantity</label>
+                        <input type="number" class="form-control" id="new-quantity" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-quantity">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize inventory search
+        const searchInput = document.getElementById('inventory-search');
+        const inventoryTable = document.getElementById('inventory-table');
+        const tableRows = inventoryTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            for (let i = 0; i < tableRows.length; i++) {
+                const row = tableRows[i];
+                const itemName = row.cells[0].textContent.toLowerCase();
+                const category = row.cells[1].textContent.toLowerCase();
+                
+                if (itemName.includes(searchTerm) || category.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+        
+        // Category filter
+        const categoryButtons = document.querySelectorAll('.btn-group [data-category]');
+        
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                for (let i = 0; i < tableRows.length; i++) {
+                    const row = tableRows[i];
+                    if (category === 'all' || row.getAttribute('data-category') === category) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        // Quick update modal
+        const quickUpdateModal = document.getElementById('quickUpdateModal');
+        const itemIdInput = document.getElementById('item-id');
+        const itemNameInput = document.getElementById('item-name');
+        const currentQuantityInput = document.getElementById('current-quantity');
+        const quantityChangeInput = document.getElementById('quantity-change');
+        const newQuantityInput = document.getElementById('new-quantity');
+        const decreaseBtn = document.getElementById('decrease-btn');
+        const increaseBtn = document.getElementById('increase-btn');
+        const saveBtn = document.getElementById('save-quantity');
+        
+        quickUpdateModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const itemId = button.getAttribute('data-item-id');
+            const itemName = button.getAttribute('data-item-name');
+            const itemQuantity = parseInt(button.getAttribute('data-item-quantity'));
+            
+            itemIdInput.value = itemId;
+            itemNameInput.value = itemName;
+            currentQuantityInput.value = itemQuantity;
+            quantityChangeInput.value = 0;
+            newQuantityInput.value = itemQuantity;
+        });
+        
+        function updateNewQuantity() {
+            const currentQuantity = parseInt(currentQuantityInput.value);
+            const change = parseInt(quantityChangeInput.value) || 0;
+            const newQuantity = Math.max(0, currentQuantity + change);
+            newQuantityInput.value = newQuantity;
+        }
+        
+        decreaseBtn.addEventListener('click', function() {
+            quantityChangeInput.value = parseInt(quantityChangeInput.value || 0) - 1;
+            updateNewQuantity();
+        });
+        
+        increaseBtn.addEventListener('click', function() {
+            quantityChangeInput.value = parseInt(quantityChangeInput.value || 0) + 1;
+            updateNewQuantity();
+        });
+        
+        quantityChangeInput.addEventListener('input', updateNewQuantity);
+        
+        saveBtn.addEventListener('click', function() {
+            const itemId = itemIdInput.value;
+            const newQuantity = newQuantityInput.value;
+            
+            // Send update to server (in a real implementation)
+            // For now, just close modal and show notification
+            const modal = bootstrap.Modal.getInstance(quickUpdateModal);
+            modal.hide();
+            
+            // Show notification
+            const alertPlaceholder = document.querySelector('.container');
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Item quantity updated successfully!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            alertPlaceholder.insertBefore(wrapper.firstChild, alertPlaceholder.firstChild);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

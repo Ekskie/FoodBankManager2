@@ -1,0 +1,430 @@
+{% extends "layout.html" %}
+
+{% block title %}Community Engagement - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="h2 mb-0">Community Engagement</h1>
+        <p class="lead">Connect with our community through events and resources</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        {% if current_user.is_authenticated and current_user.role in ['admin', 'partner'] %}
+        <a href="{{ url_for('create_event') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Create Event
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Community Engagement Module with 5-button pattern -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info bg-opacity-25">
+                <h2 class="h4 mb-0"><i class="fas fa-hands-helping me-2"></i>Community Engagement</h2>
+            </div>
+            <div class="card-body">
+                <div class="row module-buttons-container">
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#events-calendar" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h5>Events Calendar</h5>
+                                <p class="small mb-0">Community activities</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#success-stories" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-star"></i>
+                                <h5>Success Stories</h5>
+                                <p class="small mb-0">Community impact</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#campaigns" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-bullhorn"></i>
+                                <h5>Donation Campaigns</h5>
+                                <p class="small mb-0">Current initiatives</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="{{ url_for('volunteers') }}" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-user-friends"></i>
+                                <h5>Volunteer Opportunities</h5>
+                                <p class="small mb-0">Ways to help</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#educational-resources" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-book-open"></i>
+                                <h5>Educational Resources</h5>
+                                <p class="small mb-0">Learn about hunger</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Events Calendar -->
+<div class="row mb-5" id="events-calendar">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="h5 mb-0">Upcoming Events</h3>
+                <div class="btn-group" role="group" aria-label="Event filters">
+                    <button type="button" class="btn btn-outline-primary active" data-event-type="all">All Events</button>
+                    <button type="button" class="btn btn-outline-primary" data-event-type="fundraiser">Fundraisers</button>
+                    <button type="button" class="btn btn-outline-primary" data-event-type="food_drive">Food Drives</button>
+                    <button type="button" class="btn btn-outline-primary" data-event-type="workshop">Workshops</button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if upcoming_events %}
+                <div class="row" id="events-container">
+                    {% for event in upcoming_events %}
+                    <div class="col-md-6 col-lg-4 mb-4" data-event-type="{{ event.event_type }}">
+                        <div class="card h-100">
+                            <div class="card-header bg-light text-center">
+                                <span class="badge {% if event.event_type == 'fundraiser' %}bg-success{% elif event.event_type == 'food_drive' %}bg-warning text-dark{% elif event.event_type == 'workshop' %}bg-info text-dark{% elif event.event_type == 'volunteer' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                    {{ event.event_type|replace('_', ' ')|capitalize }}
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ event.title }}</h5>
+                                <p class="card-text text-muted">
+                                    <i class="fas fa-calendar-day me-1"></i> {{ event.event_date.strftime('%b %d, %Y') }}<br>
+                                    <i class="fas fa-clock me-1"></i> {{ event.event_date.strftime('%I:%M %p') }}<br>
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ event.location }}
+                                </p>
+                                <p class="card-text">{{ event.description|truncate(100) }}</p>
+                            </div>
+                            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                                <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                {% if event.registration_required %}
+                                <a href="{{ event.registration_link }}" class="btn btn-sm btn-outline-success" target="_blank">Register</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                    <h4>No Upcoming Events</h4>
+                    <p>There are no events scheduled at this time.</p>
+                    {% if current_user.is_authenticated and current_user.role in ['admin', 'partner'] %}
+                    <a href="{{ url_for('create_event') }}" class="btn btn-primary mt-2">Create an Event</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Past Events -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Past Events</h3>
+            </div>
+            <div class="card-body">
+                {% if past_events %}
+                <div class="row">
+                    {% for event in past_events[:3] %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ event.title }}</h5>
+                                <p class="card-text text-muted">
+                                    <i class="fas fa-calendar-day me-1"></i> {{ event.event_date.strftime('%b %d, %Y') }}<br>
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ event.location }}
+                                </p>
+                                <p class="card-text">{{ event.description|truncate(100) }}</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center">No past events to display.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Stories -->
+<div class="row mb-5" id="success-stories">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Success Stories</h3>
+            </div>
+            <div class="card-body">
+                <div id="successStoriesCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#successStoriesCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#successStoriesCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#successStoriesCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8 text-center py-5">
+                                    <i class="fas fa-quote-left fa-3x text-muted mb-3"></i>
+                                    <p class="lead">"The food bank has been a lifeline for my family during difficult times. The volunteers are so kind and supportive, making a challenging situation easier to bear."</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="text-center">
+                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 50px; height: 50px;">
+                                                <span>SM</span>
+                                            </div>
+                                            <p class="fw-bold mb-0">Sarah M.</p>
+                                            <p class="text-muted">Beneficiary</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8 text-center py-5">
+                                    <i class="fas fa-quote-left fa-3x text-muted mb-3"></i>
+                                    <p class="lead">"Volunteering at the food bank has been one of the most rewarding experiences of my life. Seeing the direct impact we have on our community is incredible."</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="text-center">
+                                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 50px; height: 50px;">
+                                                <span>JT</span>
+                                            </div>
+                                            <p class="fw-bold mb-0">James T.</p>
+                                            <p class="text-muted">Volunteer</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8 text-center py-5">
+                                    <i class="fas fa-quote-left fa-3x text-muted mb-3"></i>
+                                    <p class="lead">"As a local business owner, partnering with the food bank has allowed us to give back to our community in a meaningful way while reducing food waste."</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="text-center">
+                                            <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 50px; height: 50px;">
+                                                <span>RL</span>
+                                            </div>
+                                            <p class="fw-bold mb-0">Robert L.</p>
+                                            <p class="text-muted">Partner</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#successStoriesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#successStoriesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Donation Campaigns -->
+<div class="row mb-5" id="campaigns">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Current Donation Campaigns</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Summer Hunger Relief</h5>
+                                <div class="mb-3">
+                                    <div class="progress" style="height: 25px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <small>Raised: $6,500</small>
+                                        <small>Goal: $10,000</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Help us ensure no child goes hungry during the summer months when school meals are not available.</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ url_for('new_donation') }}" class="btn btn-outline-primary">Donate Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Protein Drive</h5>
+                                <div class="mb-3">
+                                    <div class="progress" style="height: 25px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <small>Collected: 400 items</small>
+                                        <small>Goal: 1,000 items</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">We're collecting canned tuna, chicken, and beans to provide essential protein to families in need.</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ url_for('new_donation') }}" class="btn btn-outline-primary">Donate Items</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Thanksgiving Basket Program</h5>
+                                <div class="mb-3">
+                                    <div class="progress" style="height: 25px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <small>Prepared: 50 baskets</small>
+                                        <small>Goal: 200 baskets</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Help us provide complete Thanksgiving meals to families who would otherwise go without during the holiday.</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ url_for('new_donation') }}" class="btn btn-outline-primary">Sponsor a Basket</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Educational Resources -->
+<div class="row mb-4" id="educational-resources">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Educational Resources</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-utensils text-primary me-2"></i>Food Waste Reduction</h5>
+                                <p class="card-text">Learn practical tips to reduce food waste at home and in your community.</p>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item">Meal planning strategies</li>
+                                    <li class="list-group-item">Proper food storage techniques</li>
+                                    <li class="list-group-item">Creative leftover recipes</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <button class="btn btn-outline-primary">Download Guide</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-seedling text-success me-2"></i>Community Gardens</h5>
+                                <p class="card-text">Start or participate in a community garden to increase access to fresh produce.</p>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item">Getting started guide</li>
+                                    <li class="list-group-item">Seasonal planting calendars</li>
+                                    <li class="list-group-item">Harvest donation programs</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <button class="btn btn-outline-primary">Access Resources</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-apple-alt text-danger me-2"></i>Nutrition on a Budget</h5>
+                                <p class="card-text">Discover how to prepare nutritious meals while managing a limited food budget.</p>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item">Budget-friendly recipes</li>
+                                    <li class="list-group-item">Smart shopping strategies</li>
+                                    <li class="list-group-item">Nutrition basics</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <button class="btn btn-outline-primary">View Resources</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Event type filter
+        const eventTypeButtons = document.querySelectorAll('[data-event-type]');
+        const eventCards = document.querySelectorAll('#events-container [data-event-type]');
+        
+        eventTypeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                eventTypeButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const eventType = this.getAttribute('data-event-type');
+                
+                eventCards.forEach(card => {
+                    if (eventType === 'all' || card.getAttribute('data-event-type') === eventType) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Initialize success stories carousel
+        const carouselElement = document.getElementById('successStoriesCarousel');
+        if (carouselElement) {
+            const carousel = new bootstrap.Carousel(carouselElement, {
+                interval: 5000
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends "layout.html" %}
+
+{% block title %}Food Bank Locations - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="h2 mb-0">Food Bank Locator</h1>
+        <p class="lead">Find food banks and assistance in your area</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+        <a href="{{ url_for('add_food_bank') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Add Food Bank
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Food Bank Locator Module with 5-button pattern -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-danger bg-opacity-25">
+                <h2 class="h4 mb-0"><i class="fas fa-map-marker-alt me-2"></i>Food Bank Locator</h2>
+            </div>
+            <div class="card-body">
+                <div class="row module-buttons-container">
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#map-view" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-map"></i>
+                                <h5>Map View</h5>
+                                <p class="small mb-0">Interactive locator</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <a href="#list-view" class="text-decoration-none">
+                            <div class="module-button shadow-sm border">
+                                <i class="fas fa-list"></i>
+                                <h5>List View</h5>
+                                <p class="small mb-0">Directory of locations</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <div class="module-button shadow-sm border">
+                            <i class="fas fa-directions"></i>
+                            <h5>Directions</h5>
+                            <p class="small mb-0">Navigation assistance</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <div class="module-button shadow-sm border">
+                            <i class="fas fa-clock"></i>
+                            <h5>Operating Hours</h5>
+                            <p class="small mb-0">When we're open</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg module-button-wrapper mb-3">
+                        <div class="module-button shadow-sm border">
+                            <i class="fas fa-phone-alt"></i>
+                            <h5>Contact Info</h5>
+                            <p class="small mb-0">Get in touch</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Map View -->
+<div class="row mb-5" id="map-view">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Find Food Banks Near You</h3>
+            </div>
+            <div class="card-body">
+                <div id="food-bank-map" class="mb-3" 
+                     data-locations='{{ food_banks|tojson }}'
+                     style="height: 500px;">
+                    <!-- Map will be rendered here by Leaflet.js -->
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" id="location-search" class="form-control" placeholder="Enter your address or ZIP code">
+                            <button class="btn btn-primary" id="search-btn" type="button">Search</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button class="btn btn-outline-primary" id="current-location-btn" type="button">
+                            <i class="fas fa-location-arrow me-1"></i> Use My Current Location
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- List View -->
+<div class="row mb-4" id="list-view">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="h5 mb-0">Food Bank Directory</h3>
+                <div class="input-group" style="max-width: 300px;">
+                    <input type="text" id="food-bank-search" class="form-control" placeholder="Search food banks...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if food_banks %}
+                <div class="row" id="food-bank-list">
+                    {% for food_bank in food_banks %}
+                    <div class="col-md-6 col-xl-4 mb-4" data-name="{{ food_bank.name.lower() }}" data-city="{{ food_bank.city.lower() }}" data-state="{{ food_bank.state.lower() }}">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ food_bank.name }}</h5>
+                                <p class="card-text">
+                                    <i class="fas fa-map-marker-alt text-danger me-2"></i>{{ food_bank.address }}<br>
+                                    {{ food_bank.city }}, {{ food_bank.state }} {{ food_bank.zip_code }}
+                                </p>
+                                <p class="card-text">
+                                    <i class="fas fa-phone me-2"></i>{{ food_bank.phone }}<br>
+                                    <i class="fas fa-envelope me-2"></i>{{ food_bank.email }}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ url_for('food_bank_detail', food_bank_id=food_bank.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                    <button class="btn btn-sm btn-outline-success" onclick="getDirections({{ food_bank.id }})">
+                                        <i class="fas fa-directions me-1"></i>Directions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-map-marker-alt fa-4x text-muted mb-3"></i>
+                    <h4>No Food Banks Found</h4>
+                    <p>There are no food banks in the system yet.</p>
+                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <a href="{{ url_for('add_food_bank') }}" class="btn btn-primary mt-2">Add a Food Bank</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize food bank search
+        const searchInput = document.getElementById('food-bank-search');
+        const foodBankList = document.getElementById('food-bank-list');
+        
+        if (searchInput && foodBankList) {
+            const foodBankCards = foodBankList.getElementsByClassName('col-md-6');
+            
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                for (let i = 0; i < foodBankCards.length; i++) {
+                    const card = foodBankCards[i];
+                    const name = card.getAttribute('data-name');
+                    const city = card.getAttribute('data-city');
+                    const state = card.getAttribute('data-state');
+                    
+                    if (name.includes(searchTerm) || city.includes(searchTerm) || state.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // Search by location
+        const locationSearch = document.getElementById('location-search');
+        const searchBtn = document.getElementById('search-btn');
+        const currentLocationBtn = document.getElementById('current-location-btn');
+        
+        if (searchBtn && locationSearch) {
+            searchBtn.addEventListener('click', function() {
+                const address = locationSearch.value;
+                if (address) {
+                    // In a real implementation, this would geocode the address and center the map
+                    alert(`Searching for food banks near: ${address}`);
+                }
+            });
+        }
+        
+        if (currentLocationBtn) {
+            currentLocationBtn.addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        
+                        // In a real implementation, this would center the map on the user's location
+                        alert(`Using your current location: ${latitude}, ${longitude}`);
+                        
+                        // If the map is initialized, this would pan to the user's location
+                        const map = document.getElementById('food-bank-map');
+                        if (map && map._leaflet_id) {
+                            map.leafletMap.setView([latitude, longitude], 13);
+                        }
+                    }, function(error) {
+                        console.error('Error getting location:', error);
+                        alert('Unable to get your current location. Please check your browser settings.');
+                    });
+                } else {
+                    alert('Geolocation is not supported by your browser.');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

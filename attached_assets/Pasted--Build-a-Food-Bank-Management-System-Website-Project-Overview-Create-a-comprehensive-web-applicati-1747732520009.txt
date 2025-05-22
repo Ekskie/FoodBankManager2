@@ -1,0 +1,133 @@
+ Build a Food Bank Management System Website
+Project Overview
+Create a comprehensive web application for a food bank management system that connects donors, beneficiaries, volunteers, partners, and administrators through an intuitive interface. The system should efficiently manage food donations, inventory, distribution logistics, and community engagement, with a consistent 5-button structure across all modules.
+System Architecture Requirements
+Develop a responsive web application with:
+
+User authentication and role-based access control
+Database integration for persistent data storage
+Mobile-friendly responsive design
+Real-time notifications and updates
+Secure data handling for sensitive user information
+Map integration for location-based services
+Reporting and analytics capabilities
+
+Core Modules Structure
+Each module should follow a consistent 5-button UI pattern. Implement the following 10 modules:
+1. User Portal Hub
+Purpose: Central navigation hub with role-based dashboards
+
+Button 1: My Dashboard - Personalized overview based on user role
+Button 2: Quick Actions - Contextual common tasks for the specific user
+Button 3: Notifications - Alerts, updates, and reminders center
+Button 4: Message Center - Communication platform between users
+Button 5: Profile Settings - Account management and preferences
+
+2. Food Inventory Center
+Purpose: Comprehensive inventory management system
+
+Button 1: Current Stock - Real-time inventory with search and filter
+Button 2: Add/Update Items - Inventory management with barcode support
+Button 3: Expiry Tracker - Alert system for expiration management
+Button 4: Distribution Planner - Allocation interface with priority settings
+Button 5: Inventory Reports - Customizable reporting dashboard
+
+3. Donation Management
+Purpose: Streamlined donation processing
+
+Button 1: Donate Now - Multi-option donation form
+Button 2: Schedule Pickup/Dropoff - Interactive scheduling calendar
+Button 3: Donation History - Searchable contribution records
+Button 4: Donor Rewards - Gamified incentive system
+Button 5: Tax Receipts - Automated receipt generation
+
+4. Beneficiary Services
+Purpose: Assistance request and management
+
+Button 1: Request Food - Simplified needs assessment form
+Button 2: Request Status - Visual status tracking system
+Button 3: Available Food - Categorized food inventory browser
+Button 4: Appointment Scheduler - Collection time booking system
+Button 5: Support Resources - Additional community services directory
+
+5. Food Bank Locator
+Purpose: Location-based services
+
+Button 1: Map View - Interactive geolocation map
+Button 2: List View - Filterable food bank directory
+Button 3: Directions - Integrated navigation/directions service
+Button 4: Operating Hours - Visual calendar of availability
+Button 5: Contact Info - Multi-channel contact system
+
+6. Partner Portal
+Purpose: Interface for partner establishments
+
+Button 1: Surplus Declaration - Food surplus reporting tool
+Button 2: Pickup Schedule - Recurring donation scheduler
+Button 3: Impact Metrics - Visual impact statistics dashboard
+Button 4: Partner Resources - Documentation and guidelines library
+Button 5: Certificate Generator - Automated certificate creator
+
+7. Volunteer Management
+Purpose: Volunteer coordination system
+
+Button 1: Sign Up - Role-based volunteer registration
+Button 2: Schedule Shifts - Interactive shift calendar
+Button 3: Log Hours - Time tracking system with verification
+Button 4: Training Resources - Educational materials library
+Button 5: Volunteer Community - Forum/social features for volunteers
+
+8. Admin Control Center
+Purpose: System administration and oversight
+
+Button 1: User Management - Role-based account administration
+Button 2: System Configuration - Customizable system settings
+Button 3: Approval Queue - Multi-stage approval workflow
+Button 4: Analytics Dashboard - Visual data analytics platform
+Button 5: Export Data - Customizable data export tools
+
+9. Distribution Planning
+Purpose: Optimize food distribution logistics
+
+Button 1: Create Distribution Plan - Distribution event creator
+Button 2: Route Optimization - Intelligent route planning tool
+Button 3: Allocation Rules - Distribution priority configuration
+Button 4: Distribution Calendar - Event management calendar
+Button 5: Post-Distribution Reports - Outcome tracking dashboard
+
+10. Community Engagement
+Purpose: Foster community involvement and awareness
+
+Button 1: Events Calendar - Community event scheduler
+Button 2: Success Stories - Impact storytelling platform
+Button 3: Donation Campaigns - Campaign creation and tracking
+Button 4: Volunteer Opportunities - Needs marketplace
+Button 5: Educational Resources - Food waste/hunger education hub
+
+Design Requirements
+
+Create a cohesive and accessible UI with consistent navigation patterns
+Implement a color scheme appropriate for a food assistance organization
+Design mobile-responsive interfaces for all modules
+Use clear iconography to complement button labels
+Ensure accessibility compliance with WCAG standards
+Implement progress indicators and loading states for all operations
+
+User Flows to Implement
+
+New user registration and role selection
+Donor journey: registration to donation completion
+Beneficiary journey: request to food collection
+Volunteer onboarding process
+Partner establishment registration and donation process
+Admin dashboard and reporting workflow
+Distribution planning and execution process
+
+Additional Features
+
+Multi-language support for diverse communities
+Dark/light mode toggle
+Data export in multiple formats (PDF, CSV, Excel)
+Email notification system
+In-app guided tutorials for new users
+Analytics for system usage and impact metrics

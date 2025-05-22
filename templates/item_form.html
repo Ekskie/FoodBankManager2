@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }} - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="h2 mb-0">{{ 'Edit' if item else 'Add' }} Inventory Item</h1>
+        <p class="lead">{{ 'Update existing' if item else 'Add new' }} food item to inventory</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ url_for('inventory') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Inventory
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="h5 mb-0"><i class="fas fa-box me-2"></i>{{ 'Edit' if item else 'Add' }} Food Item</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control", placeholder="Enter item name") }}
+                            {% for error in form.name.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.category.label(class="form-label") }}
+                            {{ form.category(class="form-select") }}
+                            {% for error in form.category.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form.quantity.label(class="form-label") }}
+                            {{ form.quantity(class="form-control", placeholder="Enter quantity") }}
+                            {% for error in form.quantity.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.unit.label(class="form-label") }}
+                            {{ form.unit(class="form-select") }}
+                            {% for error in form.unit.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form.expiry_date.label(class="form-label") }}
+                            {{ form.expiry_date(class="form-control", type="date") }}
+                            <small class="form-text text-muted">Leave blank if not applicable</small>
+                            {% for error in form.expiry_date.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.location.label(class="form-label") }}
+                            {{ form.location(class="form-control", placeholder="Storage location") }}
+                            {% for error in form.location.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.barcode.label(class="form-label") }}
+                        {{ form.barcode(class="form-control", placeholder="Item barcode (optional)") }}
+                        {% for error in form.barcode.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.allergens.label(class="form-label") }}
+                        {{ form.allergens(class="form-control", placeholder="Common allergens (e.g., nuts, dairy, gluten)") }}
+                        {% for error in form.allergens.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.nutritional_info.label(class="form-label") }}
+                        {{ form.nutritional_info(class="form-control", rows=3, placeholder="Nutritional information") }}
+                        {% for error in form.nutritional_info.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('inventory') }}" class="btn btn-outline-secondary">Cancel</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

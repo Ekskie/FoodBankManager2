@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}New Message - Food Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Compose New Message</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" novalidate class="needs-validation">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.recipient_id.label(class="form-label") }}
+                {{ form.recipient_id(class="form-select", required=True) }}
+                <div class="invalid-feedback">
+                    Please select a recipient.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.subject.label(class="form-label") }}
+                {{ form.subject(class="form-control", placeholder="Subject", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter a subject.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control", placeholder="Message content", rows="5", required=True) }}
+                <div class="invalid-feedback">
+                    Please enter the message content.
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
