@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: foodbank-manager
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app
+    envVars:
+      - key: SESSION_SECRET
+        fromSecret: session_secret
+      - key: DATABASE_URL
+        fromSecret: database_url
+    autoDeploy: true
