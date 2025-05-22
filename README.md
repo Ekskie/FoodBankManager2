@@ -91,9 +91,13 @@ A `vercel.json` file is also included for deployment on Vercel with Python suppo
 
 ## Application Screenshot
 
-![Application Screenshot]
+Home
+![image](https://github.com/user-attachments/assets/8cd0d169-ae34-4ee9-9916-493865e61723)
+Dashboard
 ![image](https://github.com/user-attachments/assets/903bf26d-95eb-4cdf-adbf-065b7c6326a3)
+Location
 ![image](https://github.com/user-attachments/assets/cedda90e-a23d-4333-86c3-62498335f00a)
+Community
 ![image](https://github.com/user-attachments/assets/cea23bec-8b6d-4d75-815b-33909409dd54)
 
 
